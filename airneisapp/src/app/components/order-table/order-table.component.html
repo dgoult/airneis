@@ -1,0 +1,200 @@
+<div class="card">
+    <p-toolbar styleClass="mb-4 gap-2">
+        <ng-template pTemplate="left">
+            <p-button
+              severity="success"
+              label="Ajouter Commande"
+              icon="pi pi-plus"
+              class="mr-2"
+              (onClick)="openNew()"
+            ></p-button>
+            <p-button
+                severity="danger"
+                label="Supprimer"
+                icon="pi pi-trash"
+                (onClick)="deleteSelectedOrders()"
+                [disabled]="!selectedOrders || !selectedOrders.length"
+            ></p-button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table
+        #dt
+        [value]="orders"
+        [rows]="10"
+        [rowsPerPageOptions]="[5, 10, 20]"
+        [paginator]="true"
+        [(selection)]="selectedOrders"
+        [rowHover]="true"
+        currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} entrées"
+        [showCurrentPageReport]="true"
+        dataKey="order_id"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 4rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th pSortableColumn="order_id">
+                    ID Commande
+                    <p-sortIcon field="order_id"></p-sortIcon>
+                </th>
+                <th pSortableColumn="user_id">
+                    Utilisateur
+                    <p-sortIcon field="user_id"></p-sortIcon>
+                </th>
+                <th pSortableColumn="address_id">
+                    Adresse
+                    <p-sortIcon field="address_id"></p-sortIcon>
+                </th>
+                <th pSortableColumn="payment_id">
+                    Paiement
+                    <p-sortIcon field="payment_id"></p-sortIcon>
+                </th>
+                <th pSortableColumn="product_id">
+                    Produit
+                    <p-sortIcon field="product_id"></p-sortIcon>
+                </th>
+                <th pSortableColumn="quantity">
+                    Quantité
+                    <p-sortIcon field="quantity"></p-sortIcon>
+                </th>
+                <th pSortableColumn="status">
+                    Statut
+                    <p-sortIcon field="status"></p-sortIcon>
+                </th>
+                <th pSortableColumn="date">
+                    Date
+                    <p-sortIcon field="date"></p-sortIcon>
+                </th>
+                <th>Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-order>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="order"></p-tableCheckbox>
+                </td>
+                <td>{{ order.order_id }}</td>
+                <td>{{ order.user_id }}</td>
+                <td>{{ order.address_id }}</td>
+                <td>{{ order.payment_id }}</td>
+                <td>{{ order.product_id }}</td>
+                <td>{{ order.quantity }}</td>
+                <td>{{ order.status }}</td>
+                <td>{{ order.date | date: 'dd/MM/yyyy HH:mm' }}</td>
+                <td>
+                    <p-button
+                        icon="pi pi-pencil"
+                        class="mr-2"
+                        [rounded]="true"
+                        [outlined]="true"
+                        severity="success"
+                        (onClick)="editOrder(order)"
+                    ></p-button>
+                    <p-button
+                        icon="pi pi-trash"
+                        severity="danger"
+                        [rounded]="true"
+                        [outlined]="true"
+                        (onClick)="deleteOrder(order)"
+                    ></p-button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <p-dialog
+        [(visible)]="orderDialog"
+        [style]="{ width: '450px' }"
+        header="Détails de la Commande"
+        [modal]="true"
+        styleClass="p-fluid"
+        *ngIf="order"
+    >
+        <ng-template pTemplate="content">
+            <div class="field">
+                <label for="order_id">ID Commande</label>
+                <input
+                    id="order_id"
+                    type="text"
+                    pInputText
+                    [(ngModel)]="order.order_id"
+                    disabled
+                />
+            </div>
+            <div class="field">
+                <label for="status">Statut</label>
+                <p-dropdown 
+                    [options]="statusOptions" 
+                    [(ngModel)]="order.status" 
+                    placeholder="Sélectionner un statut" 
+                    optionLabel="label"
+                    optionValue="value">
+                </p-dropdown>
+            </div>
+            <div class="field">
+                <label for="user_id">Utilisateur</label>
+                <input
+                    id="user_id"
+                    type="text"
+                    pInputText
+                    [(ngModel)]="order.user_id"
+                    [disabled] = "order.order_id"
+                />
+            </div>
+            <div class="field">
+                <label for="address_id">Adresse</label>
+                <input
+                    id="address_id"
+                    type="text"
+                    pInputText
+                    [(ngModel)]="order.address_id"
+                    [disabled] = "order.order_id"
+                />
+            </div>
+            <div class="field">
+                <label for="payment_id">Paiement</label>
+                <input
+                    id="payment_id"
+                    type="text"
+                    pInputText
+                    [(ngModel)]="order.payment_id"
+                    [disabled] = "order.order_id"
+                />
+            </div>
+            <div class="field">
+                <label for="product_id">Produit</label>
+                <input
+                    id="product_id"
+                    type="text"
+                    pInputText
+                    [(ngModel)]="order.product_id"
+                    [disabled] = "order.order_id"
+                />
+            </div>
+            <div class="field">
+                <label for="quantity">Quantité</label>
+                <input
+                    id="quantity"
+                    type="number"
+                    pInputText
+                    [(ngModel)]="order.quantity"
+                />
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+            <p-button 
+                label="Retour" 
+                icon="pi pi-times" 
+                [text]="true" 
+                (onClick)="hideDialog()" />
+            <p-button
+                label="Enregistrer" 
+                icon="pi pi-check" 
+                [text]="true" 
+                (onClick)="saveOrder()" />
+        </ng-template>
+    </p-dialog>
+</div>

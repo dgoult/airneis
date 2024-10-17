@@ -1,0 +1,54 @@
+<div class="card">
+    <h2 class="p-text-center">Configuration des Produits Prioritaires par Catégorie</h2>
+
+    <div class="field grid justify-content-center">
+      <!-- Sélection de la catégorie -->
+      <div class="p-fluid col-12 md:col-6">
+        <div class="p-field">
+          <label for="categorySelect">Sélectionnez une catégorie</label>
+          <p-dropdown [options]="categories" [(ngModel)]="selectedCategory" optionLabel="name" placeholder="Choisissez une catégorie" (onChange)="onCategoryChange()">
+          </p-dropdown>
+        </div>
+      </div>
+
+      <!-- Bouton de sauvegarde (sur toute la largeur en bas) -->
+      <div class="p-fluid col-12 md:col-6 p-mt-3">
+        <button pButton type="button" label="Sauvegarder Priorités" icon="pi pi-save" (click)="savePriorityProducts()"></button>
+      </div>
+    </div>
+
+    <div class="formgrid grid border-solid border-400 border-1 p-3">
+      <!-- Colonne de sélection des produits prioritaires -->
+      <div class="field col border-solid border-400 border-1 m-2 p-1">
+        <!-- Sélection des produits pour la priorité -->
+        <div class="p-fluid">
+          <div class="p-field">
+            <h3>Sélectionnez les produits à prioriser pour cette catégorie</h3>
+            <p-multiSelect [options]="products" [(ngModel)]="selectedPriorityProducts" optionLabel="name" [showClear]="true"></p-multiSelect>
+            <p>Produits sélectionnés : {{ selectedPriorityProducts.length }}</p>
+          </div>
+        </div>
+
+        <!-- Ordre des produits avec p-orderList -->
+        <div class="p-fluid">
+          <h3>Ordre des produits prioritaires</h3>
+          <p-orderList [value]="selectedPriorityProducts" [listStyle]="{ height: '25rem' }" header="Ordre des produits prioritaires">
+            <ng-template let-product pTemplate="item">
+              <div class="p-d-flex p-ai-center p-jc-between">
+                <img src="{{imageSourceBaseUrl}}{{ product.images[0].image_url }}"
+                     [alt]="product.name" class="w-4rem shadow-2 flex-shrink-0 border-round p-mr-2" />
+                <div class="p-flex-1 p-d-flex p-flex-column">
+                  <span class="font-bold">{{ product.name }}</span>
+                  <div class="p-d-flex p-ai-center">
+                    <i class="pi pi-tag p-mr-2"></i>
+                    <span>{{ categoriesLabel(product.category_id) }}</span>
+                  </div>
+                </div>
+                <span class="font-bold">{{ '€' + product.price }}</span>
+              </div>
+            </ng-template>
+          </p-orderList>
+        </div>
+      </div>
+    </div>
+  </div>

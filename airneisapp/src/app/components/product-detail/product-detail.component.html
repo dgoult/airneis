@@ -1,0 +1,58 @@
+<div class="product-detail" *ngIf="product">
+    <!-- Image principale avec nom et description -->
+    <div class="product-header grid hidden-sm hidden-xs">
+        <img src="{{imageSourceBaseUrl}}{{product.images[0].image_url}}" alt="{{product.images[0].image_url}}" class="product-image" />
+        <div class="product-name">
+            <h1>{{ product.name }}</h1>
+        </div>
+    </div>
+
+    <!-- Informations du produit -->
+    <div class="product-info grid" *ngIf="product">
+        <!-- Carrousel d'images -->
+        <div class="col-12 md:col-6 m-2">
+            <p-carousel [value]="product.images" [numVisible]="1" [numScroll]="1">
+                <ng-template let-image pTemplate="item">
+                <img [src]="imageSourceBaseUrl + image.image_url" [alt]="product.name" style="max-width: 350px; max-height: 400px; margin: auto; display: block;">
+                </ng-template>
+            </p-carousel>
+        </div>
+
+        <div class="ml-3 col-12 md:col">
+            <h1>{{ product.name }}</h1>
+            <p class="price">{{ product.price | currency:'EUR' }}</p>
+            <p class="stock" [ngClass]="{'out-of-stock': product.stock === 0}">
+            {{ product.stock > 0 ? 'En stock' : 'STOCK ÉPUISÉ' }}
+            </p>
+            <p class="description">{{ product.description }}</p>
+    
+            <div class="materials">
+            <h4>Matériaux</h4>
+            <ul>
+                <li *ngFor="let material of product.materials">{{ material.name }}</li>
+            </ul>
+            </div>
+    
+            <!-- Bouton Ajouter au Panier -->
+            <button pButton 
+                    label="AJOUTER AU PANIER" 
+                    icon="pi pi-shopping-cart" 
+                    [disabled]="product.stock === 0" 
+                    (click)="addToCart(product)">
+            </button>
+        </div>
+    </div>
+
+    <!-- Produits similaires -->
+    <div class="similar-products grid">
+        <div class="col-12 ml-3">
+            <h3 style="text-align: center;">Produits Similaires</h3>
+            <div class="p-grid">
+                <!-- Liste de produits -->    
+                <app-product-home-list [products]="similarProducts" [readOnly]="true"
+                [imageSourceBaseUrl]="imageSourceBaseUrl"></app-product-home-list>
+            </div>
+        </div>
+    </div>
+</div>
+  

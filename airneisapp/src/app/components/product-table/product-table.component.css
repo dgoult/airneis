@@ -1,0 +1,20 @@
+.image-container {
+    position: relative;
+    margin-bottom: 10px;
+  }
+  
+  .delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 5px;
+  }
+  
+  .delete-btn:hover {
+    background-color: darkred;
+  }

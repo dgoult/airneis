@@ -1,0 +1,110 @@
+<p-toolbar styleClass="mb-4 gap-2" *ngIf="onSearchPage && !readOnly">
+  <div class="p-toolbar-group-start">
+      <p-button [text]="true" severity="secondary" size="large" icon="pi pi-bars" class="p-button-rounded p-button-text" (onClick)="toggleMenu()"></p-button>
+  </div>
+  <div class="p-toolbar-group-center">
+      <input pInputText placeholder="Nom du produit" [(ngModel)]="searchText" class="col"/>
+  </div>
+  <div class="p-toolbar-group-end">
+  </div>
+</p-toolbar>
+
+<p-toolbar styleClass="mb-4 gap-2" *ngIf="!onSearchPage" >
+  <div class="grid p-toolbar-group-center">
+    <input pInputText placeholder="Nom du produit" [(ngModel)]="searchText" class="col"/>
+    <p-multiSelect 
+        [options]="materials" 
+        [(ngModel)]="selectedMaterials" 
+        optionLabel="name" 
+        optionValue="material_id"
+        placeholder="Sélectionner les matériaux"
+        display="chip" class="col" />
+      <p-multiSelect 
+          [options]="categories" 
+          [(ngModel)]="selectedCategories" 
+          optionLabel="name" 
+          optionValue="category_id"
+          placeholder="Sélectionner les catégories"
+          display="chip" class="col" />
+  </div>
+  <div class="grid p-toolbar-group-end">
+      <input pInputText type="number" placeholder="Prix min." [(ngModel)]="priceRange[0]" class="col" style="width: 50px;" />
+      <p-slider [(ngModel)]="priceRange" [max]="1000" [range]="true" styleClass="w-14rem" class="col mx-2" />
+      <input pInputText type="number" placeholder="Prix max." [(ngModel)]="priceRange[1]" class="col" style="width: 50px;" />
+      <p-checkbox 
+          [(ngModel)]="inStockOnly"
+          label="En stock uniquement" 
+          [binary]="true"
+          inputId="binary"
+          class="col" />
+      <p-dropdown [options]="sortOptions" [(ngModel)]="sortOption" (onChange)="sortProducts()" placeholder="Trier par" class="col"></p-dropdown>
+  </div>
+</p-toolbar>
+<div class="products-container grid m-4">
+    <div *ngFor="let product of (products | advancedFilter:searchText:selectedMaterials:priceRange:selectedCategories:inStockOnly)" class="col-12 md:col-6 lg:col-4">
+      <div class="border-1 surface-border border-round m-2 p-3">
+        <div class="mb-3">
+          <div class="relative mx-auto">
+            <a [routerLink]="['/product', product.product_id]" class="image-link">
+              <img 
+                src="{{imageSourceBaseUrl}}{{product.images[0].image_url}}" 
+                [alt]="product.name" 
+                class="w-full border-round"
+                style="max-width: 300px; max-height: 400px; display: block; margin: auto;" />
+              <p-tag 
+                [value]="getStockLabel(product.stock)" 
+                [severity]="getSeverity(product.stock)" 
+                class="absolute" 
+                [ngStyle]="{ 'left.px': 5, 'top.px': 5 }" />
+            </a>
+          </div>
+        </div>
+        <div class="mb-3 font-medium">
+          {{ product.name }}
+        </div>
+        <div class="flex justify-content-between align-items-center">
+          <div class="mt-0 font-semibold text-xl">
+            {{ '€' + product.price }}
+          </div>
+          <span>
+            <p-button icon="pi pi-heart" severity="secondary" [outlined]="true" />
+            <p-button *ngIf="product.stock > 0" icon="pi pi-shopping-cart" styleClass="ml-2" (onClick)="addToCart(product)" />
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar for Cart -->
+  <p-sidebar [(visible)]="cartVisible" [position]="'left'" *ngIf="onSearchPage">
+    <h3>Filtres</h3>
+    <div class="grid p-toolbar-group-center">
+      <p-button label="Réinitialiser" [text]="true" icon="pi pi-refresh" class="p-button-text col ml-2" (onClick)="resetFilters()"></p-button>
+      <p-multiSelect 
+          [options]="materials" 
+          [(ngModel)]="selectedMaterials" 
+          optionLabel="name" 
+          optionValue="material_id"
+          placeholder="Sélectionner les matériaux"
+          display="chip" class="col" />
+        <p-multiSelect 
+            [options]="categories" 
+            [(ngModel)]="selectedCategories" 
+            optionLabel="name" 
+            optionValue="category_id"
+            placeholder="Sélectionner les catégories"
+            display="chip" class="col" />
+    </div>
+    <div class="grid p-toolbar-group-end">
+        <input pInputText type="number" placeholder="Prix min." [(ngModel)]="priceRange[0]" class="col" style="width: 50px;" />
+        <p-slider [(ngModel)]="priceRange" [max]="1000" [range]="true" styleClass="w-14rem" class="col mx-2" />
+        <input pInputText type="number" placeholder="Prix max." [(ngModel)]="priceRange[1]" class="col" style="width: 50px;" />
+        <p-checkbox 
+            [(ngModel)]="inStockOnly"
+            label="En stock uniquement" 
+            [binary]="true"
+            inputId="binary"
+            class="col" />
+        <p-dropdown [options]="sortOptions" [(ngModel)]="sortOption" (onChange)="sortProducts()" placeholder="Trier par" class="col"></p-dropdown>
+    </div>
+  </p-sidebar>

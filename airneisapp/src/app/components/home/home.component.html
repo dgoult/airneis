@@ -1,0 +1,85 @@
+<div class="home-container">
+    <!-- Section Carousel -->
+    <div class="carousel-section grid">
+      <div class="col-12">
+        <p-carousel [value]="carouselProducts" [numVisible]="1" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
+          <ng-template pTemplate="item" let-product>
+
+            <div class="border-1 surface-border border-round m-2 p-3" >
+              <div class="mb-3">
+                <a [routerLink]="['/product', product.product_id]" class="image-link">
+                  <div class="relative mx-auto">
+                    <img style="max-width: 250px; max-height: 300px; margin: auto; display: block;"
+                        src="{{imageSourceBaseUrl}}{{product.images[0].image_url}}" 
+                        [alt]="product.name" 
+                        class="w-full border-round" />
+                      <p-tag 
+                          [value]="getStockLabel(product.stock)" 
+                          [severity]="getSeverity(product.stock)" 
+                          class="absolute" 
+                          [ngStyle]="{ 'left.px': 5, 'top.px': 5 }" />
+                  </div>
+                </a>
+              </div>
+              <div class="mb-3 font-medium">
+                  {{ product.name }}
+              </div>
+              <div class="flex justify-content-between align-items-center">
+              <div class="mt-0 font-semibold text-xl">
+                  {{ '€' + product.price }}
+              </div>
+                  <span>
+                      <p-button icon="pi pi-heart" severity="secondary" [outlined]="true" />
+                      <p-button *ngIf="product.stock > 0"  icon="pi pi-shopping-cart" styleClass="ml-2" (onClick)="addToCart(product)" />
+                  </span>
+              </div>
+            </div>
+
+          </ng-template>
+        </p-carousel>
+      </div>
+    </div>
+  
+    <!-- Texte fixe sous le carrousel -->
+    <div class="intro-text grid">
+      <div class="col-12" style="text-align: center;">
+        <h2>Venant des Hautes Terres d'Écosse, nos meubles sont immortels</h2>
+      </div>
+    </div>
+  
+    <!-- Section Featured Categories -->
+    <div class="featured-categories-section grid my-5"  style="text-align: center;">
+      <div class="col-12">
+        <div class="categories-container grid">
+          <div *ngFor="let category of featuredCategories" class="category-card col-12 md:col-12 lg:col-4">
+            <a [routerLink]="['/category', category.category_id]" class="image-link">
+              <div class="imageCategory-container">
+                <img 
+                  src="{{imageSourceBaseUrl}}{{category.image_url}}" 
+                  [alt]="category.image_url" 
+                  class="w-full border-round" 
+                />
+                <h3 class="imageCategory-text">{{ category.name }}</h3>
+              </div>
+            </a>
+            <!-- <img style="max-width: 250px; max-height: 300px; margin: auto; display: block;"
+                src="{{imageSourceBaseUrl}}{{category.image_url}}" 
+                [alt]="category.image_url" 
+                class="w-full border-round" />
+            <h3>{{ category.name }}</h3> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Section Highlanders Products -->
+    <div class="highlanders-section grid">
+
+        <div class="col-12">
+          <h2 style="text-align: center;">Selection de nos Highlanders</h2>
+            <app-product-home-list [products]="highlandersProducts"
+            [imageSourceBaseUrl]="imageSourceBaseUrl"></app-product-home-list>
+        </div>
+
+    </div>
+</div>

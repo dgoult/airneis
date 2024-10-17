@@ -1,0 +1,49 @@
+<div class="flex justify-content-center align-items-center h-full">
+  <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
+    <p-card header="Connexion" [style]="{ width: '360px' }">
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          type="text"
+          pInputText
+          formControlName="email"
+          class="w-full"
+          name="email"
+          placeholder="Type your email"
+        />
+        <small
+          *ngIf="email.invalid && (email.dirty || email.touched)"
+          class="block p-error"
+        >
+          <div *ngIf="email.errors?.['required']">Email est requis.</div>
+          <div *ngIf="email.errors?.['email']">Email doit être valide</div>
+        </small>
+      </div>
+      <div class="field">
+        <label for="password">Mot de passe</label>
+        <input
+          type="password"
+          pInputText
+          formControlName="password"
+          class="w-full"
+          name="password"
+          placeholder="Type your password"
+        />
+        <small
+          *ngIf="password.invalid && (password.dirty || password.touched)"
+          class="block p-error"
+        >
+          <div *ngIf="password.errors?.['required']">Mot de passe est requis.</div>
+        </small>
+      </div>
+      <p-button
+        label="Se connecter"
+        styleClass="w-full"
+        [disabled]="loginForm.invalid"
+        type="submit"
+      ></p-button>
+      <div class="mt-2">Vous n'êtes pas membre ? <a routerLink="/register">Créer un compte</a></div>
+    </p-card>
+  </form>
+
+</div>

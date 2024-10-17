@@ -1,0 +1,49 @@
+<nav class="navbar">
+    <div class="navbar-left">
+      <a routerLink="/home">
+        <img src="assets/logo.png" alt="Logo Airneis" class="logo">
+      </a>
+    </div>
+  
+    <div class="navbar-right">
+      <p-button [text]="true" severity="secondary" size="large" icon="pi pi-search" class="p-button-rounded p-button-text" (onClick)="openSearchPage()"></p-button>
+      <p-button [text]="true" severity="secondary" size="large" icon="pi pi-shopping-cart" class="p-button-rounded p-button-text" (onClick)="openCart()"></p-button>
+      <p-button [text]="true" severity="secondary" size="large" icon="pi pi-bars" class="p-button-rounded p-button-text" (onClick)="toggleMenu()"></p-button>
+    </div>
+</nav>
+
+<!-- Sidebar for Menu -->
+<p-sidebar [(visible)]="menuVisible" [position]="'right'">
+  <h3>Menu</h3>
+  <ul class="menu-items">
+    <li (click)="goToProfile()">Profil</li>
+    <li *ngIf="isConnected()" (click)="logOut()">Déconnexion</li>
+    <li *ngIf="!isConnected()" (click)="goToLogIn()">Connexion</li>
+    <li *ngIf="!isAdmin()" (click)="goToAdmin()">Page Adnministrateur</li>
+    <!-- Ajoute plus de liens ici -->
+  </ul>
+</p-sidebar>
+
+<!-- Sidebar for Cart -->
+<p-sidebar [(visible)]="cartVisible" [position]="'right'">
+  <h3>Panier</h3>
+  <div class="cart-items">
+    <!-- Liste des produits dans le panier -->
+    <div *ngFor="let item of cartItems" class="cart-item">
+        <div class="grid">
+          <p-button severity="success" icon="pi pi-plus" [text]="true" class="p-button-text col-2" (onClick)="increaseQuantity(item)"></p-button>
+          <p class="col-1 ml-1">{{ item.quantity }}</p>
+          <p-button severity="danger" icon="pi pi-trash" [text]="true" class="p-button-text col-2" (onClick)="decreaseQuantity(item.cart_item_id)"></p-button>
+          <p class="col">{{ item.name }} - {{ item.price | currency:'EUR':'symbol' }}</p>
+        </div>
+        <!-- <p-button [text]="true" severity="danger" icon="pi pi-trash" class="p-button-text col-2" (onClick)="removeFromCart(item.cart_item_id)"></p-button>
+        <p class="col">
+            {{ item.name }} - {{ item.price | currency:'EUR':'symbol' }} - {{ item.quantity }}
+        </p> -->
+      </div>
+  </div>
+  <div class="cart-total mt-3">
+      <strong>Total : {{ getCartTotal() | currency:'EUR':'symbol' }}</strong>
+  </div>
+  <button class="checkout-btn" (click)="goToCheckout()">Passer à la caisse</button>
+</p-sidebar>

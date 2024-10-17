@@ -1,0 +1,136 @@
+<div style="max-height: 100vh">
+  <p-tabView class="p-fluid">
+      <p-tabPanel header="Accueil">
+        <div class="card">
+          <h2 class="p-text-center">Paramètres de la page d'accueil</h2>
+  
+          <div class="field grid justify-content-center">  
+            <!-- Bouton de sauvegarde (sur toute la largeur en bas) -->
+            <div class="p-fluid col-12 md:col-6 p-mt-3">
+              <button pButton type="button" label="Sauvegarder" icon="pi pi-save" (click)="saveHomePatern()"></button>
+            </div>
+          </div>
+        
+          <div class="formgrid grid border-solid border-400 border-1 p-3">
+            <!-- Colonne de gauche (Sélection des produits, catégories, Highlanders) -->
+            <div class="field col border-solid border-400 border-1 m-2 p-1">
+              <!-- Sélection des produits pour le carrousel -->
+              <div class="p-fluid">
+                <div class="p-field">
+                  <h3>Sélectionnez les produits pour le carrousel (3 maximum)</h3>
+                  <p-multiSelect [options]="products" [(ngModel)]="selectedCarouselProducts" optionLabel="name" [maxSelectedLabels]="3" [showClear]="true"></p-multiSelect>
+                  <p>Produits sélectionnés : {{ selectedCarouselProducts.length }}/3</p>
+                </div>
+              </div>  
+              <!-- Ordre des produits avec p-orderList -->
+              <div class="p-fluid">
+                <h3>Ordre des produits pour le carrousel</h3>
+                <p-orderList [value]="selectedCarouselProducts" [listStyle]="{ height: '25rem' }" header="Ordre des produits pour le carrousel">
+                  <ng-template let-product pTemplate="item">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                      <img src="{{imageSourceBaseUrl}}{{ product.images[0].image_url }}" 
+                          [alt]="product.name" class="w-4rem shadow-2 flex-shrink-0 border-round p-mr-2" />
+                      <div class="p-flex-1 p-d-flex p-flex-column">
+                        <span class="font-bold">{{ product.name }}</span>
+                        <div class="p-d-flex p-ai-center">
+                          <i class="pi pi-tag p-mr-2"></i>
+                          <span>{{ categoriesLabel(product.category_id) }}</span>
+                        </div>
+                      </div>
+                      <span class="font-bold">{{ '€' + product.price }}</span>
+                    </div>
+                  </ng-template>
+                </p-orderList>
+              </div>
+            </div>
+  
+            <div class="field col border-solid border-400 border-1 m-2 p-1">
+              <!-- Sélection des catégories à afficher -->
+              <div class="p-fluid">
+                <div class="p-field">
+                  <h3>Sélectionnez les catégories à afficher (3 maximum)</h3>
+                  <p-multiSelect [options]="categories" [(ngModel)]="selectedCategories" optionLabel="name" [maxSelectedLabels]="3" [showClear]="true"></p-multiSelect>
+                  <p>Catégories sélectionnées : {{ selectedCategories.length }}/3</p>
+                </div>
+              </div>
+  
+              <!-- Ordre des produits avec p-orderList -->
+              <div class="p-fluid">
+                <h3>Ordre des catégories</h3>
+                <p-orderList [value]="selectedCategories" [listStyle]="{ height: '25rem' }" header="Ordre des catégories">
+                  <ng-template let-category pTemplate="item">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                      <span class="font-bold">{{ category.name }}</span>
+                    </div>
+                  </ng-template>
+                </p-orderList>
+              </div>
+            </div>
+  
+            <div class="field col border-solid border-400 border-1 m-2 p-1">
+              <!-- Sélection des Highlanders à afficher -->
+              <div class="p-fluid">
+                <div class="p-field">
+                  <h3>Sélectionnez les Highlanders à afficher</h3>
+                  <p-multiSelect [options]="products" [(ngModel)]="selectedHighlanders" optionLabel="name" [maxSelectedLabels]="3" [showClear]="false"></p-multiSelect>
+                  <p>Highlanders sélectionnés : {{ selectedHighlanders.length }}</p>
+                </div>
+              </div>
+  
+              <!-- Ordre des Highlanders avec p-orderList -->
+              <div class="p-fluid">
+                <h3>Ordre des Highlanders</h3>
+                <p-orderList [value]="selectedHighlanders" [listStyle]="{ height: '25rem' }" header="Ordre des Highlanders">
+                  <ng-template let-product pTemplate="item">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                      <img src="{{imageSourceBaseUrl}}{{ product.images[0].image_url }}" 
+                          [alt]="product.name" class="w-4rem shadow-2 flex-shrink-0 border-round p-mr-2" />
+                      <div class="p-flex-1 p-d-flex p-flex-column">
+                        <span class="font-bold">{{ product.name }}</span>
+                        <div class="p-d-flex p-ai-center">
+                          <i class="pi pi-tag p-mr-2"></i>
+                          <span>{{ categoriesLabel(product.category_id) }}</span>
+                        </div>
+                      </div>
+                      <span class="font-bold">{{ '€' + product.price }}</span>
+                    </div>
+                  </ng-template>
+                </p-orderList>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </p-tabPanel>
+  
+    <!-- Onglet Priorisation des Produits -->
+    <p-tabPanel header="Priorisation des Produits">
+      <app-category-priority></app-category-priority>
+    </p-tabPanel>
+  
+    <!-- Onglet Produits -->
+    <p-tabPanel header="Produits">
+      <product-table [products]="products" [materials]="materials" [categories]="categories"></product-table>
+    </p-tabPanel>
+  
+    <!-- Onglet Catégories -->
+    <p-tabPanel header="Catégories">
+      <app-category-table [categories]="categories"></app-category-table>
+    </p-tabPanel>
+  
+    <!-- Onglet Matériaux -->
+    <p-tabPanel header="Matériaux">
+      <material-table [materials]="materials"></material-table>
+    </p-tabPanel>
+  
+    <!-- Onglet Utilisateurs -->
+    <p-tabPanel header="Utilisateurs">
+      <user-table [users]="users"></user-table>
+    </p-tabPanel>
+  
+    <!-- Onglet Commandes -->
+    <p-tabPanel header="Commandes">
+      <order-table [orders]="orders"></order-table>
+    </p-tabPanel>
+  </p-tabView>
+</div>

@@ -1,0 +1,113 @@
+<div class="card">
+    <p-toolbar styleClass="mb-4 gap-2">
+      <ng-template pTemplate="left">
+        <p-button
+          severity="success"
+          label="Ajouter Matériau"
+          icon="pi pi-plus"
+          class="mr-2"
+          (onClick)="openNew()"
+        ></p-button>
+        <p-button
+          severity="danger"
+          label="Supprimer"
+          icon="pi pi-trash"
+          (onClick)="deleteSelectedMaterials()"
+          [disabled]="!selectedMaterials || !selectedMaterials.length"
+        ></p-button>
+      </ng-template>
+    </p-toolbar>
+  
+    <p-table
+      #dt
+      [value]="materials"
+      [rows]="10"
+      [rowsPerPageOptions]="[5, 10, 20]"
+      [paginator]="true"
+      [(selection)]="selectedMaterials"
+      [rowHover]="true"
+      currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} entrées"
+      [showCurrentPageReport]="true"
+      dataKey="material_id"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 4rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th pSortableColumn="name" style="min-width: 15rem">
+            Nom du Matériau
+            <p-sortIcon field="name"></p-sortIcon>
+          </th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-material>
+        <tr>
+          <td>
+            <p-tableCheckbox [value]="material"></p-tableCheckbox>
+          </td>
+          <td>{{ material.name }}</td>
+          <td>
+            <p-button
+              icon="pi pi-pencil"
+              class="mr-2"
+              [rounded]="true"
+              [outlined]="true"
+              severity="success"
+              (onClick)="editMaterial(material)"
+            ></p-button>
+            <p-button
+              icon="pi pi-trash"
+              severity="danger"
+              [rounded]="true"
+              [outlined]="true"
+              (onClick)="deleteMaterial(material)"
+            ></p-button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  
+    <p-dialog
+      [(visible)]="materialDialog"
+      [style]="{ width: '450px' }"
+      header="Détails du Matériau"
+      [modal]="true"
+      styleClass="p-fluid"
+      *ngIf="material"
+    >
+      <ng-template pTemplate="content">
+        <div class="field">
+          <label for="name">Nom du Matériau</label>
+          <input
+            id="name"
+            type="text"
+            pInputText
+            [(ngModel)]="material.name"
+            required
+            autofocus
+          />
+          <small class="p-error" *ngIf="submitted && !material.name">
+            Le nom du matériau est requis.
+          </small>
+        </div>
+      </ng-template>
+  
+      <ng-template pTemplate="footer">
+        <p-button
+          label="Annuler"
+          icon="pi pi-times"
+          [text]="true"
+          (onClick)="hideDialog()"
+        ></p-button>
+        <p-button
+          label="Enregistrer"
+          icon="pi pi-check"
+          [text]="true"
+          (onClick)="saveMaterial()"
+        ></p-button>
+      </ng-template>
+    </p-dialog>
+  </div>
+  

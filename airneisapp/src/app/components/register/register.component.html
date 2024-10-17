@@ -1,0 +1,64 @@
+<form [formGroup]="registerForm" (ngSubmit)="submitDetails()">
+  <p-card header="Inscription" [style]="{ width: '360px' }">
+    <div class="field">
+      <label for="full_name">Nom complet</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="full_name"
+        class="w-full"
+        name="full_name"
+        placeholder="Type your name"
+      />
+      <small
+        *ngIf="full_name.invalid && (full_name.dirty || full_name.touched)"
+        class="block p-error"
+      >
+        <div *ngIf="full_name.errors?.['required']">Nom complet est requis.</div>
+        <div *ngIf="full_name.errors?.['pattern']">Entrer un nom valide</div>
+      </small>
+    </div>
+    <div class="field">
+      <label for="email">Email</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="email"
+        class="w-full"
+        name="email"
+        placeholder="Type your email"
+      />
+      <small
+        *ngIf="email.invalid && (email.dirty || email.touched)"
+        class="block p-error"
+      >
+        <div *ngIf="email.errors?.['required']">Email est requis.</div>
+        <div *ngIf="email.errors?.['email']">Email doit être valide</div>
+      </small>
+    </div>
+    <div class="field">
+      <label for="password">Mot de passe</label>
+      <input
+        type="password"
+        pInputText
+        formControlName="password"
+        class="w-full"
+        name="password"
+        placeholder="Type your password"
+      />
+      <small
+        *ngIf="password.invalid && (password.dirty || password.touched)"
+        class="block p-error"
+      >
+        <div *ngIf="password.errors?.['required']">Mot de passe est requis.</div>
+      </small>
+    </div>
+    <p-button
+      label="Enregister"
+      styleClass="w-full"
+      [disabled]="registerForm.invalid"
+      type="submit"
+    ></p-button>
+    <div class="mt-2">Déjà membre ? <a routerLink="/login">Se connecter</a></div>
+  </p-card>
+</form>

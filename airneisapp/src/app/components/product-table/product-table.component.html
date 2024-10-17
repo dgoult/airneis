@@ -1,0 +1,304 @@
+<div class="card">
+    <p-toolbar styleClass="mb-4 gap-2">
+        <ng-template pTemplate="left">
+            <p-button
+                severity="success" 
+                label="Ajout" 
+                icon="pi pi-plus" 
+                class="mr-2" 
+                (onClick)="openNew()" />
+            <p-button
+                severity="danger" 
+                label="Supprimer" 
+                icon="pi pi-trash" 
+                (onClick)="deleteSelectedProducts()" 
+                [disabled]="!selectedProducts || !selectedProducts.length" />
+        </ng-template>
+    </p-toolbar>
+
+    <p-table
+        #dt
+        [value]="products"
+        [rows]="5"
+        [rowsPerPageOptions]="[5, 10, 20]"
+        [paginator]="true"
+        [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+        [tableStyle]="{ 'min-width': '75rem' }"
+        [(selection)]="selectedProducts"
+        [rowHover]="true"
+        dataKey="id"
+        currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} entrés"
+        [showCurrentPageReport]="true"
+    >
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <h5 class="m-0">Gestion des produits</h5>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input 
+                        pInputText 
+                        type="text" 
+                        (input)="applyFilterGlobal($event, 'contains')"
+                        placeholder="Search..." />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 4rem">
+                    <p-tableHeaderCheckbox />
+                </th>
+                <th pSortableColumn="name" style="min-width:15rem">
+                    Nom <p-sortIcon field="name" />
+                </th>
+                <th>
+                    Images
+                </th>
+                <th pSortableColumn="price">
+                    Prix <p-sortIcon field="price" />
+                </th>
+                <th pSortableColumn="category_id" style="min-width:10rem">
+                    Catégories <p-sortIcon field="category_id" />
+                </th>
+                <th pSortableColumn="material_id" style="min-width:10rem">
+                    Matériaux <p-sortIcon field="material_id" />
+                </th>
+                <th pSortableColumn="stock" style="min-width:10rem">
+                    Status <p-sortIcon field="stock" />
+                </th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="product" />
+                </td>
+                <td>
+                    {{ product.name }}
+                </td>
+                <td>
+                    <div *ngIf="product.images.length > 1">
+                        <!-- Carrousel -->
+                        <div class="carousel-section"
+                            width="50" 
+                            class="shadow-4" >
+                            <p-carousel [value]="product.images" [circular]="true" [autoplayInterval]="3000">
+                            <ng-template pTemplate="item" let-item>
+                                <img src="{{imageSourceBaseUrl}}{{item.image_url}}" alt="{{item.image_url}}" style="max-width: 150px; display: block; margin: auto; margin-top: 10px;" />
+                            </ng-template>
+                            </p-carousel>
+                        </div>
+                    </div>
+                    <div *ngIf="product.images.length === 1">
+                        <img src="{{imageSourceBaseUrl}}{{product.images[0].image_url}}" alt="carousel image {{product.images[0].image_url}}" style="max-width: 150px; display: block; margin: auto;" />
+                    </div>
+                    <!-- <img 
+                        [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product?.image" 
+                        [alt]="product?.name" 
+                        width="50" 
+                        class="shadow-4" /> -->
+                </td>
+                <td>
+                    {{ product.price | currency : 'EUR' }}
+                </td>
+                <td>
+                    {{ categoriesLabel(product.category_id) }}
+                </td>
+                <td>
+                    {{ materialLabel(product.materials) }}
+                </td>
+                <td>
+                    <div class="card flex justify-content-center">
+                        <p-badge
+                            badgeSize="xlarge"
+                            [value]="product.stock" 
+                            [severity]="getSeverity(product.stock)" />
+                    </div>
+                </td>
+                <td>
+                    <p-button 
+                        icon="pi pi-pencil" 
+                        class="mr-2" 
+                        [rounded]="true" 
+                        [outlined]="true" 
+                        severity="success" 
+                        (onClick)="editProduct(product)" />
+                    <p-button 
+                        icon="pi pi-trash" 
+                        severity="danger" 
+                        [rounded]="true" 
+                        [outlined]="true" 
+                        (onClick)="deleteProduct(product)" />
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="flex align-items-center justify-content-between">
+                Il y a un total de {{ products ? products.length : 0 }} produit(s).
+            </div>  
+        </ng-template>
+    </p-table>
+
+    <p-dialog 
+        [(visible)]="productDialog" 
+        [style]="{ width: '450px' }" 
+        header="Détails d'un produit" 
+        [modal]="true" 
+        styleClass="p-fluid"
+        *ngIf="product">
+            <ng-template pTemplate="content">
+                <div class="field">
+                    <label for="images">Images</label>
+                    <input type="file" (change)="onImageSelect($event)" multiple>
+                </div>
+                <small class="p-error" *ngIf="submitted && selectedImages.length === 0">
+                    Une image est requise.
+                </small>
+                
+                <div class="field">
+                    <div class="image-preview" *ngIf="selectedImages.length">
+                    <h4>Prévisualisation des Images</h4>
+                    <div *ngFor="let img of selectedImages; let i = index" class="image-container">
+                        
+                        <img src="{{imageSourceBaseUrl}}{{img}}" alt="{{img}}" width="150" height="150" class="block m-auto pb-3">
+                        <div class="mb-3">
+                            <p-button
+                                severity="danger" 
+                                label="Supprimer de la liste" 
+                                icon="pi pi-trash" 
+                                (onClick)="removeImageProduct(i)" />
+                        </div>
+                        <div class="mb-3">
+                            <p-button
+                                severity="danger" 
+                                label="Supprimer du serveur" 
+                                icon="pi pi-trash" 
+                                (onClick)="removeImage(i)" />
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- <div class="field">
+                    <label for="images">Images</label>
+                    <input type="file" (change)="onImageSelect($event)" multiple>
+                </div>
+                
+                <div class="field">
+                    <div class="image-preview" *ngIf="selectedImages.length">
+                        <h4>Prévisualisation des Images</h4>
+                        <div *ngFor="let img of selectedImages">
+                            <img src="assets/{{img}}" alt="{{img}}" width="150" height="150" class="block m-auto pb-3" >
+                        </div>
+                    </div>
+                </div> -->
+                <div class="field">
+                    <label for="name">Nom</label>
+                    <input 
+                        type="text" 
+                        pInputText 
+                        id="name" 
+                        [(ngModel)]="product.name" 
+                        required 
+                        autofocus />
+                    <small class="p-error" *ngIf="submitted && !product.name">
+                        Nom est requis.
+                    </small>
+                </div>
+                <div class="field">
+                    <label for="description">Description</label>
+                    <textarea 
+                        id="description" 
+                        pInputTextarea 
+                        [(ngModel)]="product.description" 
+                        required 
+                        rows="3" 
+                        cols="20">
+                    </textarea>
+                    <small class="p-error" *ngIf="submitted && !product.description">
+                        Une description est requise.
+                    </small>
+                </div>
+
+                <div class="field">
+                    <label for="inventoryStatus">Status du stock</label>
+                    <ng-template>
+                        <p-tag 
+                        id="inventoryStatus" 
+                            [value]="product.stock.toString()" 
+                            [severity]="getSeverity(product.stock)" />
+                    </ng-template>
+                </div>
+
+                <div class="field">
+                    <label for="materials">Matériaux</label>
+                    <p-multiSelect 
+                        [options]="materials" 
+                        [(ngModel)]="selectedMaterials" 
+                        optionLabel="name" 
+                        optionValue="material_id"
+                        placeholder="Sélectionner les matériaux"
+                        display="chip">
+                    </p-multiSelect>
+                    <small class="p-error" *ngIf="submitted && selectedMaterials.length === 0">
+                        Un matériau est requis.
+                    </small>
+                </div>
+
+                <div class="field">
+                    <label class="mb-3">Catégories</label>
+                    <small class="p-error" *ngIf="submitted && !product.category_id">
+                        Une catégorie est requise.
+                    </small>
+                    <div class="formgrid grid">
+                        <!-- Afficher dynamiquement les catégories -->
+                        <div *ngFor="let category of categories" class="field-radiobutton col-6">
+                            <p-radioButton 
+                                [id]="'category' + category.category_id" 
+                                name="category" 
+                                [value]="category.category_id" 
+                                [(ngModel)]="product.category_id" />
+                            <label [for]="'category' + category.category_id">{{ category.name }}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <label for="price">Prix</label>
+                        <p-inputNumber 
+                            id="price" 
+                            [(ngModel)]="product.price" 
+                            mode="currency" 
+                            currency="EUR" 
+                            locale="fr-FR" />
+                            <small class="p-error" *ngIf="submitted && !product.price">
+                                Un prix est requis.
+                            </small>
+                    </div>
+                    <div class="field col">
+                        <label for="quantity">Quantité</label>
+                        <p-inputNumber 
+                            id="quantity" 
+                            [(ngModel)]="product.stock" />
+                        <small class="p-error" *ngIf="submitted && !product.stock">
+                            Une quantité est requise.
+                        </small>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <p-button 
+                    label="Retour" 
+                    icon="pi pi-times" 
+                    [text]="true" 
+                    (onClick)="hideDialog()" />
+                <p-button
+                    label="Enregistrer" 
+                    icon="pi pi-check" 
+                    [text]="true" 
+                    (onClick)="saveProduct()" />
+            </ng-template>
+    </p-dialog>
+</div>

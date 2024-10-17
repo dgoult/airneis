@@ -1,0 +1,41 @@
+.category-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.category-header {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.category-image {
+  width: 100%;
+  height: 500px; /* Donne plus d'espace à l'image */
+  object-fit: cover; /* Ajuste l'image pour qu'elle couvre tout l'espace */
+  object-position: center; /* Centrage de l'image */
+}
+
+.category-info {
+  text-align: center;
+  position: absolute;
+  top: 45%;
+  left: 45%;
+  background: rgba(0, 0, 0, 0.6); /* Fond semi-transparent pour le texte */
+  padding: 10px 20px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.category-description {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 0 15px;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  text-align: center;
+  color: #333;
+}

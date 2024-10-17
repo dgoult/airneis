@@ -1,0 +1,142 @@
+{
+    "_type": "export",
+    "__export_format": 4,
+    "__export_date": "2024-10-12T12:00:00.000Z",
+    "__export_source": "insomnia.desktop.app:v2021.5.3",
+    "resources": [
+      {
+        "_id": "wrk_1",
+        "created": 1634567890123,
+        "modified": 1634567890123,
+        "name": "API Airneis",
+        "description": "",
+        "_type": "workspace"
+      },
+      {
+        "_id": "env_1",
+        "created": 1634567890123,
+        "modified": 1634567890123,
+        "parentId": "wrk_1",
+        "name": "Base Environment",
+        "data": {
+          "base_url": "http://localhost:8000"
+        },
+        "_type": "environment"
+      },
+      {
+        "_id": "req_1",
+        "parentId": "wrk_1",
+        "modified": 1634567890123,
+        "created": 1634567890123,
+        "url": "{{ base_url }}/api/test",
+        "name": "Test API",
+        "description": "",
+        "method": "GET",
+        "body": {},
+        "parameters": [],
+        "headers": [],
+        "authentication": {},
+        "_type": "request"
+      },
+      {
+        "_id": "req_2",
+        "parentId": "wrk_1",
+        "modified": 1634567890123,
+        "created": 1634567890123,
+        "url": "{{ base_url }}/api/login",
+        "name": "Login",
+        "description": "",
+        "method": "POST",
+        "body": {
+          "mimeType": "application/json",
+          "text": "{\"email\": \"user@example.com\", \"password\": \"password123\"}"
+        },
+        "parameters": [],
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "authentication": {},
+        "_type": "request"
+      },
+      {
+        "_id": "req_3",
+        "parentId": "wrk_1",
+        "modified": 1634567890123,
+        "created": 1634567890123,
+        "url": "{{ base_url }}/api/register",
+        "name": "Register",
+        "description": "",
+        "method": "POST",
+        "body": {
+          "mimeType": "application/json",
+          "text": "{\"full_name\": \"John Doe\", \"email\": \"johndoe@example.com\", \"password\": \"password123\"}"
+        },
+        "parameters": [],
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "authentication": {},
+        "_type": "request"
+      },
+      {
+        "_id": "req_4",
+        "parentId": "wrk_1",
+        "modified": 1634567890123,
+        "created": 1634567890123,
+        "url": "{{ base_url }}/api/products",
+        "name": "Get All Products",
+        "description": "",
+        "method": "GET",
+        "body": {},
+        "parameters": [],
+        "headers": [],
+        "authentication": {},
+        "_type": "request"
+      },
+      {
+        "_id": "req_5",
+        "parentId": "wrk_1",
+        "modified": 1634567890123,
+        "created": 1634567890123,
+        "url": "{{ base_url }}/api/client/orders",
+        "name": "Create Order",
+        "description": "",
+        "method": "POST",
+        "body": {
+          "mimeType": "application/json",
+          "text": "{\"user_id\": 1, \"address_id\": 1, \"payment_id\": 1, \"products\": [{\"product_id\": 1, \"quantity\": 2}]}"
+        },
+        "parameters": [],
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "authentication": {},
+        "_type": "request"
+      },
+      {
+        "_id": "req_6",
+        "parentId": "wrk_1",
+        "modified": 1634567890123,
+        "created": 1634567890123,
+        "url": "{{ base_url }}/api/admin/users",
+        "name": "Get All Users (Admin)",
+        "description": "",
+        "method": "GET",
+        "body": {},
+        "parameters": [],
+        "headers": [],
+        "authentication": {},
+        "_type": "request"
+      }
+    ]
+  }
+  

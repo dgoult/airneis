@@ -1,0 +1,20 @@
+<div class="category-detail">
+    <!-- Image principale avec nom et description -->
+    <div class="category-header">
+        <img src="{{imageSourceBaseUrl}}{{categoryImageUrl}}" alt="{{ categoryImageUrl }}" class="category-image" />
+        <div class="category-info">
+            <h1>{{ categoryName }}</h1>
+        </div>
+    </div>
+    
+    <!-- Description de la catégorie -->
+    <div class="intro-text grid">
+      <div class="col-12" style="text-align: center;">
+        <h2>{{ categoryDescription }}</h2>
+      </div>
+    </div>
+</div>
+
+<!-- Liste de produits -->    
+<app-product-home-list [products]="products" [onCategoryPage]="true"
+[imageSourceBaseUrl]="imageSourceBaseUrl"></app-product-home-list>

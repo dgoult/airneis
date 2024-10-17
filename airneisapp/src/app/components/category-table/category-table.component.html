@@ -1,0 +1,140 @@
+<p-toolbar styleClass="mb-4 gap-2">
+    <ng-template pTemplate="left">
+        <p-button
+            severity="success" 
+            label="Ajout" 
+            icon="pi pi-plus" 
+            class="mr-2" 
+            (onClick)="addCategory()" />
+    </ng-template>
+</p-toolbar>
+
+<p-table
+    #dt
+    [value]="categories"
+    [rows]="5"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    [paginator]="true"
+    [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+    [tableStyle]="{ 'min-width': '75rem' }"
+    [rowHover]="true"
+    dataKey="id"
+    currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} entrés"
+    [showCurrentPageReport]="true"
+>
+    <ng-template pTemplate="caption">
+        <div class="flex align-items-center justify-content-between">
+            <h5 class="m-0">Gestion des catégories</h5>
+            <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input 
+                    pInputText 
+                    type="text" 
+                    (input)="applyFilterGlobal($event, 'contains')"
+                    placeholder="Search..." />
+            </span>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="name" style="min-width:15rem">
+                Nom <p-sortIcon field="name" />
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Image
+            </th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-category>
+        <tr>
+            <td>
+                {{ category.name }}
+            </td>
+            <td>
+                {{ category.description }}
+            </td>
+            <td>
+                <div>
+                    <img src="{{imageSourceBaseUrl}}{{category.image_url}}" alt="{{category.image_url ?? 'Non saisie'}}" style="max-width: 150px; display: block; margin: auto;" />
+                </div>
+            </td>
+            <td>
+                <p-button 
+                    icon="pi pi-pencil" 
+                    class="mr-2" 
+                    [rounded]="true" 
+                    [outlined]="true" 
+                    severity="success" 
+                    (onClick)="editCategory(category)" />
+                <p-button 
+                    icon="pi pi-trash" 
+                    severity="danger" 
+                    [rounded]="true" 
+                    [outlined]="true" 
+                    (onClick)="deleteCategory(category)" />
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+        <div class="flex align-items-center justify-content-between">
+            Il y a {{ categories ? categories.length : 0 }} catégorie(s).
+        </div>  
+    </ng-template>
+</p-table>
+
+<!-- Dialog for adding a new category -->
+<p-dialog [(visible)]="categoryDialog" [modal]="true" [responsive]="true" [style]="{width: '400px'}"
+    [header]="editMode ? 'Modifier la Catégorie' : 'Ajouter une Catégorie'"
+    *ngIf="category">
+    <ng-template pTemplate="content">
+        <div class="field">
+            <label for="name">Nom de la catégorie</label>
+            <input type="text" pInputText [(ngModel)]="category.name" id="name" required />
+            <small class="p-error" *ngIf="submitted && !category.name">Le nom de la catégorie est requis.</small>
+        </div>
+        <div class="field">
+            <label for="name">Description de la catégorie</label>
+            <input type="text" pInputText [(ngModel)]="category.description" id="name" required />
+            <small class="p-error" *ngIf="submitted && !category.description">Le description de la catégorie est requis.</small>
+        </div>
+
+        <!-- Image Upload Section -->
+        <div class="field">
+            <label for="images">Image</label>
+            <input type="file" (change)="onImageSelect($event)" multiple>
+        </div>
+        <small class="p-error" *ngIf="submitted && selectedImages.length === 0 || selectedImages.length > 1">Une seul image est requise.</small>
+
+        <!-- Preview of selected images -->
+        <div class="field" *ngIf="selectedImages.length">
+            <h4>Prévisualisation des Images</h4>
+            <div *ngFor="let img of selectedImages; let i = index" class="image-container">
+                <img [src]="imageSourceBaseUrl + img" alt="{{img}}" width="150" height="150" class="block m-auto pb-3">
+                <div class="mb-3">
+                    <p-button severity="danger" label="Supprimer de la liste" icon="pi pi-trash" (onClick)="removeImageCategory(i)"></p-button>
+                </div>
+                <div class="mb-3">
+                    <p-button severity="danger" label="Supprimer du serveur" icon="pi pi-trash" (onClick)="removeImage(i)"></p-button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    
+
+    <ng-template pTemplate="footer">
+        <p-button 
+            label="Retour" 
+            icon="pi pi-times" 
+            [text]="true" 
+            (onClick)="hideDialog()" />
+        <p-button
+            label="Enregistrer" 
+            icon="pi pi-check" 
+            [text]="true" 
+            (onClick)="saveCategory()" />
+    </ng-template>
+</p-dialog>

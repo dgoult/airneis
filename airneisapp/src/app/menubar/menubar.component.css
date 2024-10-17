@@ -1,0 +1,91 @@
+  /* Styles pour les sidebars (menus latéraux) */
+.p-sidebar {
+    width: 100%; /* Pour les petits écrans */
+  }
+  
+  @media (min-width: 768px) {
+    .p-sidebar {
+      width: 300px; /* Largeur fixe pour les écrans moyens et grands */
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .p-sidebar {
+      width: 400px; /* Augmente la largeur sur les très grands écrans */
+    }
+  }
+  
+  .menu-items {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .menu-items li {
+    margin: 1rem 0;
+    cursor: pointer;
+  }
+  
+  /* Ajustements de la navbar */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #f4f4f4;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .navbar-left {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar-center {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .logo {
+    width: 100px;
+  }
+  
+  .cart-items {
+    padding: 1rem 0;
+  }
+  
+  .navbar-right p-button {
+    padding-left: 20px;
+  }
+  
+  /* Cacher la barre de recherche sur les petits écrans */
+  @media (max-width: 768px) {
+    .navbar-center {
+      display: none;
+    }
+  }
+  
+  @media (min-width: 769px) {
+    .navbar-center {
+      display: block;
+    }
+  }
+  
+  /* Styles pour le bouton de paiement */
+  .checkout-btn {
+    width: 100%;
+    padding: 1rem;
+    background-color: #e91e63;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .checkout-btn:hover {
+    background-color: #d81b60;
+  }

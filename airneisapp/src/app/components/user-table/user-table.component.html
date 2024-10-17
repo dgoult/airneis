@@ -1,0 +1,142 @@
+<div class="card">
+    <p-toolbar styleClass="mb-4 gap-2">
+        <ng-template pTemplate="left">
+            <p-button
+                severity="success"
+                label="Ajouter Utilisateur"
+                icon="pi pi-plus"
+                class="mr-2"
+                (onClick)="openNew()"
+            ></p-button>
+            <p-button
+                severity="danger"
+                label="Supprimer"
+                icon="pi pi-trash"
+                (onClick)="deleteSelectedUsers()"
+                [disabled]="!selectedUsers || !selectedUsers.length"
+            ></p-button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table
+        #dt
+        [value]="users"
+        [rows]="10"
+        [rowsPerPageOptions]="[5, 10, 20]"
+        [paginator]="true"
+        [(selection)]="selectedUsers"
+        [rowHover]="true"
+        currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} entrées"
+        [showCurrentPageReport]="true"
+        dataKey="user_id"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 4rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th pSortableColumn="full_name" style="min-width: 15rem">
+                    Nom de l'utilisateur
+                    <p-sortIcon field="full_name"></p-sortIcon>
+                </th>
+                <th>Email</th>
+                <th>Rôle</th>
+                <th>Email vérifié</th>
+                <th>Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-user>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="user"></p-tableCheckbox>
+                </td>
+                <td>{{ user.full_name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.role }}</td>
+                <td>{{ verifiedEmailLabel(user.email_verified) }}</td>
+                <td>
+                    <p-button
+                        icon="pi pi-pencil"
+                        class="mr-2"
+                        [rounded]="true"
+                        [outlined]="true"
+                        severity="success"
+                        (onClick)="editUser(user)"
+                    ></p-button>
+                    <p-button
+                        icon="pi pi-trash"
+                        severity="danger"
+                        [rounded]="true"
+                        [outlined]="true"
+                        (onClick)="deleteUser(user)"
+                    ></p-button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <p-dialog
+        [(visible)]="userDialog"
+        [style]="{ width: '450px', height: '550px' }"
+        header="Détails de l'Utilisateur"
+        [modal]="true"
+        styleClass="p-fluid"
+        *ngIf="user"
+    >
+        <ng-template pTemplate="content">
+            <div class="field">
+                <label for="full_name">Nom</label>
+                <input
+                    id="full_name"
+                    type="text"
+                    pInputText
+                    [(ngModel)]="user.full_name"
+                    required
+                    autofocus
+                />
+                <small class="p-error" *ngIf="submitted && !user.full_name">
+                    Le nom est requis.
+                </small>
+            </div>
+            <div class="field">
+                <label for="email">Email</label>
+                <input
+                    id="email"
+                    type="email"
+                    pInputText
+                    [(ngModel)]="user.email"
+                    required
+                />
+                <small class="p-error" *ngIf="submitted && !user.email">
+                    L'email est requis.
+                </small>
+            </div>
+            <div class="field">
+                <label for="role">Rôle</label>
+                <p-dropdown 
+                    [options]="roleOptions" 
+                    [(ngModel)]="user.role" 
+                    placeholder="Sélectionner un rôle" 
+                    optionLabel="label"
+                    optionValue="value">
+                </p-dropdown>
+                <small class="p-error" *ngIf="submitted && !user.role">
+                    Le rôle est requis.
+                </small>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+            <p-button 
+                label="Retour" 
+                icon="pi pi-times" 
+                [text]="true" 
+                (onClick)="hideDialog()" />
+            <p-button
+                label="Enregistrer" 
+                icon="pi pi-check" 
+                [text]="true" 
+                (onClick)="saveUser()" />
+        </ng-template>
+    </p-dialog>
+</div>

@@ -1,0 +1,28 @@
+/* Assure que le body et le html prennent toute la hauteur */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+  }
+  
+  /* Assure que le conteneur principal prend toute la hauteur */
+  .p-tabview {
+    height: 100%;
+  }
+  
+  /* Ajoute un défilement pour la zone de contenu des onglets */
+  .p-tabview-panel {
+    overflow-y: auto;
+    max-height: 80vh; /* Limite la hauteur à 80% de la hauteur de la vue, ajustable */
+  }
+  
+  /* Assure que le conteneur est bien dimensionné et s'adapte à l'écran */
+  .p-tabpanel-content {
+    height: 100%;
+  }
+  
+  /* Gestion des éléments pour prendre toute la hauteur */
+  .p-tabview, .p-tabview-panel, .p-tabpanel-content {
+    box-sizing: border-box;
+  }

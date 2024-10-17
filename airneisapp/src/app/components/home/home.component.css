@@ -1,0 +1,37 @@
+h3 {
+  font-size: 1.5rem;
+}
+
+.home-container {
+  overflow-x: hidden; /* Empêche également le défilement horizontal dans cette section */
+}
+
+.imageCategory-container {
+  position: relative;
+  display: inline-block;
+  max-width: 350px;
+  max-height: 400px;
+}
+
+.imageCategory-container img {
+  display: block;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.imageCategory-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white; /* Changez cette couleur pour correspondre à vos besoins */
+  font-size: 1.2em;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.5); /* Ajoute un fond semi-transparent pour mieux voir le texte */
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.image-link {
+  text-decoration: none; /* Supprime les soulignements par défaut des liens */
+}
